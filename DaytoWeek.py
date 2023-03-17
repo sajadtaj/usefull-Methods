@@ -29,3 +29,7 @@ def convert_daytoweek(df:pd.DataFrame,day:str='Wednesday'):
     finalDataframe =merged[merged['weekDay'] ==day ]
 
     return finalDataframe
+
+
+
+#just for test in our pc

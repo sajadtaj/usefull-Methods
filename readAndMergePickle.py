@@ -21,3 +21,15 @@ for address in total_name_file :
     df = pd.read_pickle(address)
     total_data = pd.concat([ total_data,df])
 
+#
+# OR 
+#
+total_data =[]
+
+for address in total_name_file : 
+    try:
+        df = pd.read_pickle(address)
+        total_data.append(df)
+    except: pass
+#-----------------------
+total_data = pd.concat(total_data)

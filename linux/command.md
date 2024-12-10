@@ -16,7 +16,14 @@
 # 1. عملیات فایل و دایرکتوری
 - **`ls`**: نمایش محتویات دایرکتوری.
   ```bash
-  ls -l  # لیست تفصیلی
+  ls        # دیدن محتویات یک مسیر 
+  ls -l     # لیست تفصیلی
+  ls *.txt  #  دیدن همه فایلها با پسوند txt
+  ls -ltch  # دیدن فایلها با مخصات بیشتر
+  ```
+- **فایل‌ها و دایرکتوری‌های مخفی**: برای نمایش فایل‌ها و دایرکتوری‌های مخفی (که با نقطه شروع می‌شوند) از گزینه `-a` استفاده کنید.
+  ```bash
+  ls -a
   ```
 - **`cd`**: تغییر دایرکتوری.
   ```bash
@@ -26,6 +33,18 @@
 - **`pwd`**: نمایش دایرکتوری کاری فعلی.
   ```bash
   pwd
+  ```
+
+- **`man`**:دیدن دستور العمل هر  command
+  ```bash
+  man ls
+  man cd
+  ```
+
+- **`whereis`**:دیدن محل ذخیره شدن فایل اجرایی هر  command
+  ```bash
+  whereis ls
+  whereis cd
   ```
 - **`mkdir`**: ایجاد یک دایرکتوری جدید.
   ```bash
@@ -47,10 +66,6 @@
   ```bash
   stat file.txt
   ```
-- **فایل‌ها و دایرکتوری‌های مخفی**: برای نمایش فایل‌ها و دایرکتوری‌های مخفی (که با نقطه شروع می‌شوند) از گزینه `-a` استفاده کنید.
-  ```bash
-  ls -a
-  ```
 
 # 2. مجوزهای فایل
 - **`chmod`**: تغییر مجوزهای فایل.
@@ -69,11 +84,11 @@
 # 3. مشاهده و ویرایش فایل‌ها
 **`cat`**: نمایش محتویات فایل.
 
+دیدن همه فایل های که نامشان با `file` شروع می شود
+
 ```bash
 cat file*
-```
-دیدن همه فایل های که نامشان با `file` شروع می شود
-```bash
+
 
 ```
 
@@ -293,4 +308,284 @@ man ls   # مشاهده راهنمای دستور ls
 ```bash
 # find sajad SAJAD Sajad SaJaD
 find -i sajad  
+```
+
+
+## :دستورات مربوط به ادمین
+
+### استفاده از `sudo`
+#### دستورات مزتبط با کاربر
+
+`useradd`
+```bash
+sudo <command>  #دستورات بعد از sudoبا دسترسی ادمین اجرا می شوند
+
+sudo useradd <username> #افزودن کاربر جدید 
+sudo useradd -m <username> # افزودن کاربر جدید و ساخت هوم دایرکتوری
+
+sudo useradd <username> -e 10-10-24 # افزودنن کاربر جدیدهمراه با تاریخ انقضا
+sudo useradd <username> -g <groupname>  # افزودن کاربر جدید همراه با اضافه کردن به گروه مشخص
+```
+<hr>
+
+`groupadd`
+```bash
+sudo groupadd <groupname>
+# ایجاد یک گروه جدید با نام مشخص
+sudo groupadd developers
+
+# ایجاد یک گروه جدید با GID مشخص
+sudo groupadd -g <GID> <groupname>
+sudo groupadd -g 1050 finance
+
+# ایجاد گروه سیستمی (گروهی با GID کمتر از 1000)
+sudo groupadd -r <groupname>
+sudo groupadd -r system_group
+
+# نمایش نسخه دستور groupadd
+groupadd --version
+
+# ایجاد گروه با تنظیمات پیش‌فرض (با توجه به فایل /etc/login.defs)
+sudo groupadd <groupname>
+
+#برای حذف یک گروه 
+sudo groupdel <groupname>
+
+```
+فایل‌های مرتبط:
+
+`/etc/group`: فایل حاوی لیست گروه‌ها در سیستم.\
+`/etc/login.defs`: فایل پیکربندی پیش‌فرض برای ایجاد کاربران و گروه‌ها.
+
+
+<hr>
+
+`passwd`
+
+دستور `passwd` برای مدیریت رمز عبور کاربران در سیستم‌های لینوکسی استفاده می‌شود
+```bash
+passwd
+# تغییر رمز عبور کاربر فعلی
+
+# تغییر رمز عبور یک کاربر دیگر (نیاز به دسترسی ریشه یا sudo)
+sudo passwd <username>
+
+# قفل کردن حساب کاربری (غیرفعال کردن رمز عبور کاربر)
+sudo passwd -l <username>
+sudo passwd -l john
+
+# باز کردن قفل حساب کاربری
+sudo passwd -u <username>
+
+# حذف رمز عبور کاربر (امکان ورود بدون رمز عبور)
+sudo passwd -d <username>
+sudo passwd -d jane
+
+# تنظیم تاریخ انقضای رمز عبور کاربر
+sudo passwd -e <username>
+
+# تغییر تعداد روزهای انقضا و اطلاع از انقضای رمز عبور
+sudo passwd -n <minimum_days> -x <maximum_days> -w <warning_days> <username>
+
+# (رمز عبور کاربر "john" پس از 90 روز منقضی می‌شود و 10 روز قبل از انقضا هشدار داده می‌شود.)
+sudo passwd -x 90 -w 10 john
+
+
+# مشاهده اطلاعات مربوط به رمز عبور کاربر (فقط توسط کاربر ریشه)
+sudo passwd -S <username>
+
+```
+`-l` : قفل کردن حساب (Lock). \
+`-u` : باز کردن قفل حساب (Unlock).\
+`-d` : حذف رمز عبور.\
+`-e` : مجبور کردن کاربر به تغییر رمز عبور در ورود بعدی.\
+`-n` : تنظیم تعداد روزهای حداقل برای تغییر رمز عبور.\
+`-x` : تنظیم تعداد روزهای حداکثر برای انقضای رمز عبور.\
+`-w` : تعداد روزهای اطلاع‌رسانی قبل از انقضای رمز عبور.\
+`-S` : نمایش وضعیت رمز عبور کاربر.
+
+<hr>
+
+
+`usermode`
+
+دستور `-aG` باعث می‌شود که کاربر به یک گروه اضافه شود بدون اینکه از گروه‌های دیگر حذف شود. (append Group)
+
+```bash
+
+sudo usermod -aG <groupname> <username>
+# افزودن یک کاربر به گروه مشخص
+
+# افزودن کاربر به گروه docker (برای استفاده از داکر بدون نیاز به sudo)
+sudo usermod -aG docker <username>
+
+# تغییر نام کاربری
+sudo usermod -l <new_username> <old_username>
+
+# قفل کردن حساب کاربری
+sudo usermod -L <username>
+
+# باز کردن قفل حساب کاربری
+sudo usermod -U <username>
+
+# تغییر پوشه خانگی (home directory) کاربر
+sudo usermod -d /new/home/directory <username>
+
+# تغییر پوشه خانگی و انتقال فایل‌های موجود به پوشه جدید
+sudo usermod -d /new/home/directory -m <username>
+
+# تغییر UID کاربر
+sudo usermod -u <new_uid> <username>
+
+# تغییر GID گروه اصلی کاربر
+sudo usermod -g <new_gid> <username>
+
+```
+<hr>
+
+`groupmod`
+
+دستور `groupmod` برای تغییر تنظیمات گروه‌های موجود در سیستم‌های لینوکسی استفاده می‌شود.
+
+```bash
+sudo groupmod -n <new_groupname> <old_groupname>
+# تغییر نام یک گروه
+sudo groupmod -n engineers developers
+
+
+# تغییر GID یک گروه
+sudo groupmod -g <new_GID> <groupname>
+sudo groupmod -g 2000 finance
+
+# تغییر نام و GID گروه به‌طور همزمان
+sudo groupmod -n <new_groupname> -g <new_GID> <old_groupname>
+sudo groupmod -n admins -g 1500 staff
+
+```
+
+<hr>
+
+`chown`
+
+دستور `chown` برای تغییر مالکیت (owner) و گروه (group) فایل‌ها و دایرکتوری‌ها در لینوکس استفاده می‌شود.
+
+```bash
+sudo chown <new_owner> <file_or_directory>
+# تغییر مالک فایل یا دایرکتوری
+sudo chown alice file.txt
+
+
+# تغییر گروه فایل یا دایرکتوری
+sudo chown :<new_group> <file_or_directory>
+sudo chown :developers /var/www/
+
+# تغییر هم‌زمان مالک و گروه فایل یا دایرکتوری
+sudo chown <new_owner>:<new_group> <file_or_directory>
+sudo chown alice:developers project.zip
+
+# تغییر مالک و گروه همه فایل‌ها و دایرکتوری‌های داخل یک مسیر به‌صورت بازگشتی
+sudo chown -R <new_owner>:<new_group> <directory>
+sudo chown -R bob:staff /home/bob/
+
+# تغییر فقط مالکیت فایل‌ها (بدون تغییر گروه)
+sudo chown --changes <new_owner> <file_or_directory>
+
+# تغییر مالک و گروه یک مسیر خاص و نمایش جزئیات تغییرات
+sudo chown --verbose <new_owner>:<new_group> <file_or_directory>
+
+```
+
+<hr>
+
+`chmod`
+
+دستور `chmod` برای تغییر مجوزهای دسترسی (Permissions) فایل‌ها و دایرکتوری‌ها در سیستم‌های لینوکسی استفاده می‌شود. 
+
+```bash
+ls -l # دیدن مجوز دسترسی ها
+
+chmod [options] <permissions> <file_or_directory>
+# تغییر مجوزها به صورت عددی (مثلاً 755)
+chmod 755 <file_or_directory>
+
+# تغییر مجوزها به صورت نمادین (مثلاً افزودن مجوز اجرا برای مالک)
+chmod u+x <file_or_directory>
+
+# حذف مجوز نوشتن از گروه
+chmod g-w <file_or_directory>
+
+# تنظیم مجوزها برای همه کاربران (مالک، گروه و دیگران)
+chmod a+r <file_or_directory>
+
+```
+نمادهای مربوط به مجوزها:
+
+سه بخش اصلی مجوزها:\
+`u`: مالک (user)\
+`g`: گروه (group)\
+`o`: دیگران (others)\
+`a`: همه (all)
+
+نوع دسترسی:\
+`r`:4: خواندن (read)\
+`w`:2: نوشتن (write)\
+`x`:1: اجرا (execute)
+
+عملیات:\
+`+`: افزودن مجوز\
+`-`: حذف مجوز\
+`=`: تنظیم مجوز به‌طور دقیق
+
+مثال:
+
+```bash
+chmod u+x script.sh
+# به فایل مجوز اجرا برای مالک اضافه می‌شود.
+
+chmod g-w file.txt
+# مجوز نوشتن از گروه برای فایل حذف می‌شود.
+
+chmod 744 file.txt
+# این دستور به مالک مجوز خواندن، نوشتن، و اجرا، و به دیگران فقط مجوز خواندن می‌دهد.
+
+chmod u=rwx,g=rx,o=r file.txt
+#این دستور مجوزها را به‌طور دقیق برای فایل به این شکل تنظیم می‌کند:
+# مالک: خواندن، نوشتن، و اجرا (rwx)
+# گروه: خواندن و اجرا (rx)
+# دیگران: خواندن (r)
+
+```
+
+<hr>
+
+`chgrp`
+
+دستور `chgrp` در لینوکس برای تغییر گروه مالک (Group Ownership) فایل‌ها و دایرکتوری‌ها استفاده می‌شود. 
+
+```bash
+sudo chgrp <groupname> <file_or_directory>
+# تغییر گروه یک فایل یا دایرکتوری
+sudo chgrp developers file.txt  # file
+sudo chgrp staff /var/www       # dir
+
+# تغییر گروه فایل‌ها و دایرکتوری‌ها به صورت بازگشتی
+sudo chgrp -R <groupname> <directory>
+sudo chgrp -R admins /home/project
+
+# نمایش جزئیات تغییر گروه‌ها
+sudo chgrp --verbose <groupname> <file_or_directory>
+sudo chgrp --verbose users report.txt
+
+```
+
+### ترکیب با دستورات دیگر:
+ترکیب با `chown`: تغییر مالک و گروه هم‌زمان:
+
+
+```bash
+sudo chgrp developers file.txt
+sudo chmod 775 file.txt
+
+sudo chown user:developers file.txt
+
 ```

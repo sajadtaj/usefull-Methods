@@ -34,7 +34,7 @@ output :
 ```shell
 ps 
 # or
-ls /poorc
+ls /proc
 ``` 
 
 ### `-p`
@@ -144,16 +144,16 @@ output:
 
 ### `Unit types`:
 
-1. **Service Units**: `.service`
-2. **Socket Units**: `.socket`
-3. **Target Units**: `.target`
-4. **Mount Units**: `.mount`
+1. **Service Units**:   `.service`
+2. **Socket Units**:    `.socket`
+3. **Target Units**:    `.target`
+4. **Mount Units**:     `.mount`
 5. **Automount Units**: `.automount`
-6. **Swap Units**: `.swap`
-7. **Path Units**: `.path`
-8. **Timer Units**: `.timer`
-9. **Slice Units**: `.slice`
-10. **Scope Units**: `.scope`
+6. **Swap Units**:      `.swap`
+7. **Path Units**:      `.path`
+8. **Timer Units**:     `.timer`
+9. **Slice Units**:     `.slice`
+10. **Scope Units**:    `.scope`
 
 در systemd، واحدها (units) اشیایی هستند که عملیات و فرآیندهای مختلف سیستم را نمایندگی می‌کنند. هر واحد (unit) نوع مشخصی دارد که عملکرد خاصی را تعیین می‌کند. در زیر به برخی از انواع واحدهای (unit types) معمول در systemd و توضیحات آن‌ها اشاره می‌شود:
 
@@ -217,6 +217,34 @@ output:
 systemctl -list-units
 ```
 
+### `list-units-files`
+دیدن فایلهای سرویس ها
+
+```
+systemctl list-units-file
+```
+
+#### `state`
+
+فیلتر کرد براساس وضعیت سرویس
+
+#### وضعیت‌های یونیت در `systemctl`
+1. **enabled**: یونیت به طور خودکار در هنگام بوت سیستم فعال و اجرا می‌شود.
+2. **disabled**: یونیت به طور خودکار در هنگام بوت سیستم فعال نمی‌شود، اما می‌توان آن را به صورت دستی فعال کرد.
+3. **static**: یونیت خودش به تنهایی نمی‌تواند فعال شود، بلکه به عنوان وابستگی برای یونیت‌های دیگر استفاده می‌شود.
+4. **masked**: یونیت عمداً غیرفعال شده و نمی‌تواند اجرا شود.
+5. **generated**: یونیت‌هایی که به صورت خودکار توسط سیستم تولید شده‌اند.
+6. **indirect**: یونیتی که به صورت غیرمستقیم از طریق alias اجرا می‌شود.
+7. **alias**: یونیتی که به نام یونیت دیگری اشاره می‌کند.
+
+### مثال
+
+
+```shell
+systemctl list-units-file --state=disable
+
+```
+
 ### `--type`
 
 مشص کردن نوع `unit` که میواهیم ببینیم.
@@ -225,4 +253,156 @@ systemctl -list-units
 
 ```shell
 systemd list-units --type=target
+```
+
+## بررسی یک سرویس مشص
+
+### `cat`
+دیدن توضیجات آن سرویس
+مثال : `Docker`
+
+```shell
+systemctl cat docker
+```
+>> Output
+
+### [Unit]
+- **Description:** توضیحات کوتاه درباره سرویس.
+- **Documentation:** لینک مستندات سرویس.
+- **After:** تعیین ترتیب شروع سرویس‌های دیگر قبل از این سرویس.
+- **Wants:** سرویس‌هایی که این سرویس نیاز دارد ولی عدم موفقیت آنها باعث شکست این سرویس نمی‌شود.
+- **Requires:** سرویس‌هایی که این سرویس حتماً به آنها نیاز دارد و عدم موفقیت آنها باعث شکست این سرویس می‌شود.
+
+### [Service]
+- **Type:** نوع اعلان شروع سرویس.
+- **ExecStart:** فرمان شروع سرویس.
+- **ExecReload:** فرمان بارگذاری مجدد سرویس.
+- **TimeoutStartSec:** زمان انتظار برای شروع سرویس.
+- **Restart:** پیکربندی برای راه‌اندازی مجدد سرویس در صورت خروج.
+- **RestartSec:** زمان تاخیر قبل از راه‌اندازی مجدد.
+- **StartLimitBurst:** تعداد دفعات شروع در یک بازه زمانی مشخص.
+- **StartLimitInterval:** بازه زمانی برای StartLimitBurst.
+- **LimitNPROC:** حداکثر تعداد پروسه‌ها.
+- **LimitCORE:** حداکثر اندازه فایل‌های هسته.
+- **TasksMax:** حداکثر تعداد کارها.
+- **Delegate:** اجازه دادن به سرویس برای کنترل گروه‌های cgroup.
+- **KillMode:** کنترل کدام پروسه‌ها در هنگام توقف سرویس کشته شوند.
+- **OOMScoreAdjust:** تنظیم امتیاز Out-Of-Memory (OOM) killer.
+
+### [Install]
+- **WantedBy:** تعیین هدفی که سرویس به آن لینک شده است.
+
+## `Status`
+ برای بررسی وضعیت فعلی یک سرویس در سیستم استفاده می‌شود.به عنوان مثال، برای بررسی وضعیت سرویس `apache2` از دستور زیر استفاده می‌شود:
+
+```sh
+systemctl status apache2
+```
+
+### خروجی دستور
+خروجی این دستور شامل اطلاعات جامعی درباره وضعیت سرویس مورد نظر است. به طور معمول خروجی به شکل زیر است:
+
+```sh
+● apache2.service - The Apache HTTP Server
+   Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enabled)
+   Active: active (running) since Mon 2024-12-30 09:00:00 UTC; 1 day 10h ago
+     Docs: https://httpd.apache.org/docs/2.4/
+ Main PID: 1234 (apache2)
+    Tasks: 55 (limit: 4915)
+   Memory: 24.5M
+   CGroup: /system.slice/apache2.service
+           ├─1234 /usr/sbin/apache2 -k start
+           ├─1235 /usr/sbin/apache2 -k start
+           └─1236 /usr/sbin/apache2 -k start
+```
+- **Loaded:** نشان می‌دهد که فایل سرویس بارگذاری شده است و آیا سرویس برای شروع خودکار پیکربندی شده است یا خیر.
+- **Active:** وضعیت فعلی سرویس را نشان می‌دهد که آیا سرویس در حال اجرا است یا نه.
+- **Docs:** لینک به مستندات مربوط به سرویس.
+- **Main PID:** شناسه فرآیند اصلی سرویس.
+- **Tasks:** تعداد وظایفی که سرویس در حال حاضر اجرا می‌کند.
+- **Memory:** میزان حافظه‌ای که توسط سرویس استفاده شده است.
+- **CGroup:** مسیری که نشان دهنده مکان سرویس در سیستم گروه‌های کنترلی است.
+
+آیا توضیحات بیشتری نیاز دارید یا سوال دیگری دارید؟
+
+
+## دستوراتی که میتوانیم به سرویس ها بدهیم
+
+### ` start`
+
+   - **توضیح:** این دستور برای شروع یک سرویس خاص استفاده می‌شود.
+   - **مثال:** 
+   
+```shell
+systemctl start apache2
+```
+
+### ` stop`
+   - **توضیح:** این دستور برای متوقف کردن یک سرویس خاص استفاده می‌شود.
+   - **مثال:** 
+   
+```shell
+systemctl stop docker
+```
+
+### ` restart`
+   - **توضیح:** این دستور برای راه‌اندازی مجدد یک سرویس استفاده می‌شود.
+   - **مثال:** 
+
+
+```shell
+systemctl restart nginx
+```
+
+
+### ` enable`
+   - **توضیح:** این دستور برای فعال کردن یک سرویس به منظور شروع خودکار آن در زمان راه‌اندازی سیستم استفاده می‌شود.
+   - **مثال:**
+   
+```shell
+systemctl enable ssh
+```
+
+### ` disable`
+   - **توضیح:** این دستور برای غیرفعال کردن یک سرویس به منظور جلوگیری از شروع خودکار آن در زمان راه‌اندازی سیستم استفاده می‌شود.
+   - **مثال:** 
+
+```shell
+systemctl disable mysql
+```
+
+### ` status`
+   - **توضیح:** این دستور برای بررسی وضعیت فعلی یک سرویس استفاده می‌شود.
+   - **مثال:**
+
+   ```shell
+ systemctl status apache2
+```
+
+### ` is-active`
+   - **توضیح:** این دستور برای بررسی فعال بودن یا نبودن یک سرویس استفاده می‌شود.
+   - **مثال:** 
+
+```shell
+systemctl is-active docker
+```
+
+
+### ` reload`
+   - **توضیح:** این دستور برای بارگذاری مجدد پیکربندی یک سرویس بدون توقف کامل آن استفاده می‌شود.
+   - **مثال:** 
+
+```shell
+systemctl reload apache2
+
+```
+## Service command
+میتوانیم دستورات اشاره شده در قسمت قبل را به شیوه زیر بزنیم :
+
+
+```shell
+service <service_name> status
+#like:
+service pstgresql@14-main status
+
 ```

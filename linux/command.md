@@ -641,3 +641,171 @@ man ls   # مشاهده راهنمای دستور ls
 # find sajad SAJAD Sajad SaJaD
 find -i sajad  
 ```
+---
+
+# 10.`cp`
+
+برای انتقال فایل از یک محیط به محیط دیگر
+
+
+`-i`
+
+1. **Interactive (درخواست تأیید قبل از بازنویسی):**
+کپی دایرکتوری‌ها و محتویاتشان به صورت بازگشتی.
+
+```sh
+cp -i SOURCE DESTINATION
+cp -i file1.txt file2.txt
+```
+`-r`
+
+2. **Recursive (کپی بازگشتی دایرکتوری‌ها):**
+  ```sh
+  cp -r SOURCE DESTINATION
+  cp -r dir1/ dir2/
+  ```
+`-v`
+
+3. **Verbose (نمایش فایل‌های کپی‌شده):**
+```sh
+cp -v SOURCE DESTINATION
+cp -v file1.txt file2.txt
+```
+`-f`
+
+4. **Force (اجبار به بازنویسی فایل‌ها بدون تأیید):**
+```sh
+cp -f SOURCE DESTINATION
+cp -f file1.txt file2.txt
+```
+`-u`
+
+5. **Update (کپی فقط فایل‌های جدیدتر یا ناموجود در مقصد):**
+```sh
+cp -u SOURCE DESTINATION
+cp -u file1.txt file2.txt
+```
+`-p`
+
+6. **Preserve (حفظ ویژگی‌های فایل):**
+```sh
+cp -p SOURCE DESTINATION
+cp -p file1.txt file2.txt
+```
+`-a`
+
+7. **Archive (کپی به صورت بایگانی):**
+
+سایر ویژگی های ان فایل مانند سطوح دسترسی و مالکیت را نیز حفط می کند.
+```sh
+cp -a SOURCE DESTINATION
+cp -a dir1/ dir2/
+```
+
+# 11.`mv`
+
+برای انتقال فایل از یک محیط به محیط دیگر
+
+`-i`
+
+1. **Interactive (درخواست تأیید قبل از بازنویسی):**
+
+تأیید قبل از بازنویسی فایل‌های موجود.
+```sh
+mv -i SOURCE DESTINATION
+mv -i file1.txt file2.txt
+```
+`-v`
+
+2. **Verbose (نمایش فایل‌های جابجا شده):**
+
+نمایش فایل‌های جابجا شده در طول عملیات جابجایی.
+```sh
+mv -v SOURCE DESTINATION
+mv -v file1.txt file2.txt
+```
+`-f`
+
+3. **Force (اجبار به بازنویسی فایل‌ها بدون تأیید):**
+
+اجبار به بازنویسی فایل‌ها بدون درخواست تأیید.
+```sh
+mv -f SOURCE DESTINATION
+mv -f file1.txt file2.txt
+```
+
+`-u`
+
+4. **Update (جابجایی فقط فایل‌های جدیدتر یا ناموجود در مقصد):**
+
+جابجایی فقط فایل‌هایی که جدیدتر از فایل‌های موجود در مقصد هستند یا در مقصد وجود ندارند.
+```sh
+mv -u SOURCE DESTINATION
+mv -u file1.txt file2.txt
+```
+
+---
+
+# `find`
+
+دستور `find` در لینوکس برای جستجوی فایل‌ها و دایرکتوری‌ها بر اساس معیارهای مختلف مانند نام، نوع، اندازه، زمان تغییر و غیره استفاده می‌شود. این دستور یکی از ابزارهای قدرتمند و انعطاف‌پذیر برای مدیریت فایل‌ها در سیستم‌عامل‌های شبه‌یونیکس است.
+
+## `-name`
+
+1. **Search by Name (جستجو براساس نام):**
+
+جستجو فایل‌ها و دایرکتوری‌ها براساس نام.
+   ```sh
+   find /path -name "filename"
+   find /home/user -name "file.txt"
+   ```
+## `-type`
+
+2. **Search by Type (جستجو براساس نوع):**
+
+جستجو فایل‌ها یا دایرکتوری‌ها براساس نوع.
+   ```sh
+   find /path -type TYPE
+   find /home/user -type f  # For files
+   find /home/user -type d  # For directories
+   ```
+## `-size`
+
+3. **Search by Size (جستجو براساس اندازه):**
+
+جستجو فایل‌ها براساس اندازه.
+   ```sh
+   find /path -size SIZE
+   find /home/user -size +100M  # Files larger than 100MB
+   ```
+
+## `-mtime`
+
+4. **Search by Modification Time (جستجو براساس زمان تغییر):**
+
+جستجو فایل‌ها براساس زمان آخرین تغییر.
+   ```sh
+   find /path -mtime N
+   find /home/user -mtime -7  # Files modified in the last 7 days
+   ```
+
+
+## `-exec`
+
+5. **Execute Command (اجرای دستور بر روی نتایج جستجو):**
+
+اجرای دستور خاص بر روی نتایج جستجو.
+   ```sh
+   find /path -name "filename" -exec COMMAND {} \;
+   find /home/user -name "*.log" -exec rm {} \;  # Delete all .log files
+   ```
+
+## `-perm`
+
+6. **Search by Permissions (جستجو براساس مجوزها):**
+
+جستجو فایل‌ها براساس مجوزهای دسترسی.
+   ```sh
+   find /path -perm MODE
+   find /home/user -perm 644  # Files with 644 permissions
+   ```

@@ -33,7 +33,7 @@ output:
 `service`
 
 ```shell
-systemctl s 
+systemctl status postgresql@14-main.service  
 ```
 output:
 
